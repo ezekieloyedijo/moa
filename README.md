@@ -41,7 +41,8 @@ src/
 1. Sign up at [neon.tech](https://neon.tech) (free) and create a project. Pick the region closest to your Vercel region (e.g. `aws-us-east-1` for Vercel `iad1`).
 2. Open **Dashboard → Connect**.
    - With **Connection pooling ON**, copy the string (its host contains `-pooler`). This is `DATABASE_URL`.
-   - With **Connection pooling OFF**, copy the string. This is `DIRECT_URL`.
+   - With **Connection pooling OFF**, copy the string. This is `DATABASE_URL_UNPOOLED`.
+   - *Shortcut:* if you create the database from **Vercel → Storage → Neon** instead, Vercel adds both `DATABASE_URL` and `DATABASE_URL_UNPOOLED` to the project for you.
 
 ### b. Run locally
 ```bash
@@ -65,7 +66,7 @@ Vercel project → **Storage → Create → Blob** → connect it to the project
 | Variable | Required | What it is |
 |---|---|---|
 | `DATABASE_URL` | ✅ | Neon **pooled** connection string |
-| `DIRECT_URL` | ✅ | Neon **direct** connection string (migrations) |
+| `DATABASE_URL_UNPOOLED` | ✅ | Neon **direct** connection string (migrations). Added automatically by the Vercel Neon integration |
 | `BLOB_READ_WRITE_TOKEN` | ✅ | Added automatically when you connect Blob |
 | `AUTH_SECRET` | ✅ | Long random string |
 | `ADMIN_EMAIL` | ✅ | The owner's login email |

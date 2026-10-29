@@ -1,6 +1,7 @@
 // Prisma schema for the Mercy Adedayo portfolio.
 // Neon setup: DATABASE_URL = pooled connection (runtime queries, "-pooler" host),
-//             DIRECT_URL   = direct/unpooled connection (used by `prisma migrate`).
+//             DATABASE_URL_UNPOOLED = direct connection (used by `prisma migrate`).
+// These are the names the Vercel Neon integration sets automatically.
 
 generator client {
   provider = "prisma-client-js"
@@ -9,7 +10,7 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 enum VideoPlatform {
