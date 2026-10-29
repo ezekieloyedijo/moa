@@ -1,0 +1,277 @@
+// Prisma schema for the Mercy Adedayo portfolio.
+// Neon setup: DATABASE_URL = pooled connection (runtime queries, "-pooler" host),
+//             DIRECT_URL   = direct/unpooled connection (used by `prisma migrate`).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum VideoPlatform {
+  YOUTUBE
+  VIMEO
+  INSTAGRAM
+  TIKTOK
+}
+
+enum Orientation {
+  LANDSCAPE
+  PORTRAIT
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+/// Single-row table (id is always "site").
+model SiteSettings {
+  id                 String    @id @default("site")
+  brandName          String    @default("MOA")
+  ownerName          String
+  role               String
+  tagline            String    @default("")
+  heroHeadline       String    @default("")
+  heroSubheadline    String    @default("")
+  rotatingWords      String[]  @default([])
+  trustLine          String    @default("")
+  availabilityStatus String    @default("Available for new projects")
+  availableFrom      String    @default("")
+  location           String    @default("")
+  timezone           String    @default("Africa/Lagos")
+  email              String    @default("")
+  whatsappNumber     String    @default("")
+  calendlyUrl        String    @default("")
+  replyTime          String    @default("I reply within 24 hours")
+  happyClients       Int       @default(40)
+  heroVideoUrl       String    @default("")
+  heroPosterUrl      String    @default("")
+  showreelUrl        String    @default("")
+  showreelThumbnailUrl String  @default("")
+  logoLightUrl       String    @default("")
+  logoDarkUrl        String    @default("")
+  portraitUrl        String    @default("")
+  portraitAlt        String    @default("")
+  aboutHeading       String    @default("")
+  aboutText          String    @default("")
+  softwareTools      String[]  @default([])
+  yearsExperience    Int       @default(0)
+  seoTitle           String    @default("")
+  seoDescription     String    @default("")
+  ogImageUrl         String    @default("")
+  googleSiteVerification String @default("")
+  googleAnalyticsId  String    @default("")
+  metaPixelId        String    @default("")
+  leadMagnetTitle    String    @default("")
+  leadMagnetUrl      String    @default("")
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  name      String
+  slug      String    @unique
+  order     Int       @default(0)
+  projects  Project[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Project {
+  id             String           @id @default(cuid())
+  title          String
+  slug           String           @unique
+  client         String           @default("")
+  categoryId     String?
+  category       Category?        @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  description    String           @default("")
+  role           String           @default("")
+  tools          String[]         @default([])
+  resultMetric   String           @default("")
+  platform       VideoPlatform    @default(YOUTUBE)
+  videoUrl       String
+  videoId        String
+  orientation    Orientation      @default(LANDSCAPE)
+  thumbnailUrl   String           @default("")
+  thumbnailAlt   String           @default("")
+  publishedAt    DateTime         @default(now())
+  featured       Boolean          @default(false)
+  published      Boolean          @default(true)
+  order          Int              @default(0)
+  isCaseStudy    Boolean          @default(false)
+  challenge      String           @default("")
+  approach       String           @default("")
+  results        String           @default("")
+  beforeImageUrl String           @default("")
+  afterImageUrl  String           @default("")
+  socialLinks    SocialPostLink[]
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([published, order])
+}
+
+model SocialPostLink {
+  id        String        @id @default(cuid())
+  projectId String
+  project   Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  platform  VideoPlatform
+  url       String
+  viewCount String        @default("")
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+}
+
+model Service {
+  id            String   @id @default(cuid())
+  title         String
+  description   String
+  deliverables  String[] @default([])
+  turnaround    String   @default("")
+  startingPrice String   @default("")
+  icon          String   @default("film")
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model PricingTier {
+  id         String   @id @default(cuid())
+  name       String
+  price      String
+  features   String[] @default([])
+  revisions  String   @default("")
+  turnaround String   @default("")
+  isPopular  Boolean  @default(false)
+  ctaLabel   String   @default("Book a Call")
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Testimonial {
+  id        String   @id @default(cuid())
+  name      String
+  role      String   @default("")
+  company   String   @default("")
+  quote     String
+  rating    Int      @default(5)
+  photoUrl  String   @default("")
+  videoUrl  String   @default("")
+  published Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model FAQ {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Stat {
+  id        String   @id @default(cuid())
+  label     String
+  value     Int
+  suffix    String   @default("")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ClientLogo {
+  id        String   @id @default(cuid())
+  name      String
+  logoUrl   String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SocialLink {
+  id        String   @id @default(cuid())
+  platform  String
+  url       String
+  handle    String   @default("")
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model ProcessStep {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  icon        String   @default("spark")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+/// Problem -> Solution section rows.
+model PainPoint {
+  id        String   @id @default(cuid())
+  problem   String
+  solution  String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model GalleryItem {
+  id          String      @id @default(cuid())
+  title       String      @default("")
+  caption     String      @default("")
+  imageUrl    String
+  altText     String      @default("")
+  category    String      @default("Stills")
+  orientation Orientation @default(LANDSCAPE)
+  width       Int         @default(1600)
+  height      Int         @default(900)
+  featured    Boolean     @default(false)
+  published   Boolean     @default(true)
+  order       Int         @default(0)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model ContactMessage {
+  id          String   @id @default(cuid())
+  name        String
+  email       String
+  projectType String   @default("")
+  budget      String   @default("")
+  message     String
+  isRead      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isRead, createdAt])
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}
+
+/// Fixed-window rate limiting (login + public forms). No Redis needed.
+model RateLimit {
+  key         String   @id
+  count       Int      @default(0)
+  windowStart DateTime @default(now())
+}

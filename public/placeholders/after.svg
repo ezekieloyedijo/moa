@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff8a4c"/><stop offset=".55" stop-color="#b8325a"/><stop offset="1" stop-color="#1d1440"/></linearGradient></defs>
+  <rect width="1600" height="900" fill="url(#g)"/>
+  <circle cx="1150" cy="300" r="120" fill="#ffd27a"/>
+  <path d="M0 700 400 420 700 620 1050 380 1600 720V900H0z" fill="#0f2a3d"/>
+  <text x="80" y="820" font-family="Arial, sans-serif" font-size="56" font-weight="700" fill="#ffffff">GRADED + EDITED</text>
+</svg>
