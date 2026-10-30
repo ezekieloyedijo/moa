@@ -4,10 +4,10 @@
  * Public form actions. These are POSTs (not page views), so it's fine
  * for them to touch the database.
  */
-import { headers } from "next/headers";
 import { prisma } from "@/lib/db";
-import { rateLimit } from "@/lib/rate-limit";
+import { clientIp, rateLimit } from "@/lib/rate-limit";
 import { contactSchema, subscribeSchema } from "@/lib/validators";
+import { escapeHtml, sendEmail } from "@/lib/email";
 
 export type FormState = {
   status: "idle" | "success" | "error";
@@ -17,11 +17,6 @@ export type FormState = {
   /** Echoed back on error so fields survive React's post-action form reset. */
   values?: Record<string, string>;
 };
-
-async function clientIp() {
-  const h = await headers();
-  return h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip") || "unknown";
-}
 
 /** Bots fill the hidden field or submit instantly; real people do neither. */
 function looksLikeSpam(form: FormData) {
@@ -75,29 +70,17 @@ export async function subscribe(_prev: FormState, form: FormData): Promise<FormS
   }
 }
 
-/** Optional email via Resend's HTTP API (no SDK needed). Never blocks the form. */
+/** Optional email alert for new enquiries. Never blocks the form. */
 async function notifyOwner(msg: { name: string; email: string; projectType: string; budget: string; message: string }) {
-  const key = process.env.RESEND_API_KEY;
   const to = process.env.NOTIFY_EMAIL || process.env.ADMIN_EMAIL;
-  if (!key || !to) return;
-  const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]!);
-  try {
-    await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from: process.env.RESEND_FROM || "Portfolio <onboarding@resend.dev>",
-        to: [to],
-        reply_to: msg.email,
-        subject: `New enquiry from ${msg.name}${msg.projectType ? ` — ${msg.projectType}` : ""}`,
-        html: `<h2>New portfolio enquiry</h2>
-<p><b>Name:</b> ${esc(msg.name)}<br/><b>Email:</b> ${esc(msg.email)}<br/>
-<b>Project:</b> ${esc(msg.projectType || "—")}<br/><b>Budget:</b> ${esc(msg.budget || "—")}</p>
-<p style="white-space:pre-wrap">${esc(msg.message)}</p>`,
-      }),
-      signal: AbortSignal.timeout(5000),
-    });
-  } catch (err) {
-    console.error("[resend]", err);
-  }
+  if (!to) return;
+  await sendEmail({
+    to,
+    replyTo: msg.email,
+    subject: `New enquiry from ${msg.name}${msg.projectType ? ` — ${msg.projectType}` : ""}`,
+    html: `<h2>New portfolio enquiry</h2>
+<p><b>Name:</b> ${escapeHtml(msg.name)}<br/><b>Email:</b> ${escapeHtml(msg.email)}<br/>
+<b>Project:</b> ${escapeHtml(msg.projectType || "—")}<br/><b>Budget:</b> ${escapeHtml(msg.budget || "—")}</p>
+<p style="white-space:pre-wrap">${escapeHtml(msg.message)}</p>`,
+  });
 }

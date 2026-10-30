@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useActionState, useState } from "react";
 import { login } from "./actions";
 import { inputCls } from "@/components/admin/fields";
@@ -16,7 +17,12 @@ export function LoginForm() {
         <input key={state.email} name="email" type="email" inputMode="email" autoComplete="username" required defaultValue={state.email} className={cn(inputCls, "mt-2 border-line")} />
       </label>
       <label className="block text-sm font-semibold">
-        Password
+        <span className="flex items-center justify-between">
+          Password
+          <Link href="/admin/forgot" className="text-xs font-medium text-muted underline underline-offset-4 hover:text-fg">
+            Forgot password?
+          </Link>
+        </span>
         <span className="relative mt-2 block">
           <input name="password" type={show ? "text" : "password"} autoComplete="current-password" required className={cn(inputCls, "border-line pr-20")} />
           <button type="button" onClick={() => setShow((s) => !s)} className="absolute right-2 top-1/2 min-h-9 -translate-y-1/2 rounded-lg px-3 text-xs font-medium text-muted hover:text-fg">

@@ -10,9 +10,10 @@ export const authConfig = {
   trustHost: true,
   providers: [],
   callbacks: {
-    /** Gate every /admin route except the login page. */
+    /** Gate every /admin route except the login and password-reset pages. */
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
+      if (["/admin/forgot", "/admin/reset"].some((p) => nextUrl.pathname.startsWith(p))) return true;
       const isLogin = nextUrl.pathname.startsWith("/admin/login");
       if (isLogin) {
         return isLoggedIn ? Response.redirect(new URL("/admin", nextUrl)) : true;

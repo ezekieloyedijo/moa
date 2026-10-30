@@ -1,5 +1,12 @@
 import "server-only";
+import { headers } from "next/headers";
 import { prisma } from "./db";
+
+/** The visitor's IP as reported by Vercel's proxy; used as a rate-limit key. */
+export async function clientIp() {
+  const h = await headers();
+  return h.get("x-forwarded-for")?.split(",")[0]?.trim() || h.get("x-real-ip") || "unknown";
+}
 
 /**
  * Fixed-window rate limiter stored in Postgres (no Redis needed on the free tier).

@@ -174,10 +174,27 @@ export const subscribeSchema = z.object({
   email: z.string().trim().toLowerCase().email("Enter a valid email"),
 });
 
+const newPassword = z.string().min(10, "Use at least 10 characters").max(200);
+const passwordsMatch = { message: "Passwords don't match", path: ["confirm"] };
+
 export const passwordSchema = z
   .object({
     current: z.string().min(1, "Required"),
-    next: z.string().min(10, "Use at least 10 characters").max(200),
+    next: newPassword,
     confirm: z.string(),
   })
-  .refine((v) => v.next === v.confirm, { message: "Passwords don't match", path: ["confirm"] });
+  .refine((v) => v.next === v.confirm, passwordsMatch);
+
+/** "Forgot password" step 1: the email to send the reset link to. */
+export const forgotPasswordSchema = z.object({
+  email: z.string().trim().toLowerCase().email("Enter a valid email"),
+});
+
+/** "Forgot password" step 2: the token from the emailed link + the new password. */
+export const resetPasswordSchema = z
+  .object({
+    token: z.string().min(20, "This reset link is invalid").max(200),
+    next: newPassword,
+    confirm: z.string(),
+  })
+  .refine((v) => v.next === v.confirm, passwordsMatch);

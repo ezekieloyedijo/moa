@@ -72,7 +72,7 @@ Vercel project → **Storage → Create → Blob** → connect it to the project
 | `ADMIN_EMAIL` | ✅ | The owner's login email |
 | `ADMIN_PASSWORD_HASH` | ✅* | bcrypt hash from `npm run hash-password -- "password"` |
 | `NEXT_PUBLIC_SITE_URL` | ✅ | e.g. `https://mercyadedayo.com` (no trailing slash) |
-| `RESEND_API_KEY`, `NOTIFY_EMAIL`, `RESEND_FROM` | optional | Email alerts for new contact messages |
+| `RESEND_API_KEY`, `NOTIFY_EMAIL`, `RESEND_FROM` | optional | "Forgot password" emails and alerts for new contact messages |
 
 \* Not needed if you already created the admin by running the seed against the production database.
 
@@ -98,6 +98,8 @@ Pick **one** method:
 - **Env hash (no local setup):** run `npm run hash-password -- "your-strong-password"`, then paste the hash into `ADMIN_PASSWORD_HASH` on Vercel along with `ADMIN_EMAIL`. Your first successful login creates the account. (In a local `.env`, escape each `$` as `\$`; the script prints both versions.)
 
 Log in at **`https://your-domain.com/admin`**. Change the password any time under **Account**. After 5 failed attempts in 15 minutes, login is locked for that IP and email until the window resets.
+
+**Forgot password?** The login page links to `/admin/forgot`, which emails a single-use reset link (valid for 30 minutes). This needs `RESEND_API_KEY`. With the default sender (`onboarding@resend.dev`), Resend only delivers to the email address that owns the Resend account, so **sign up for Resend with the admin email** (or verify your own domain in Resend and set `RESEND_FROM`).
 
 ---
 
