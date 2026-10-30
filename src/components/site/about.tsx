@@ -21,7 +21,7 @@ const abbr = (t: string) => TOOL_ABBR[t.toLowerCase()] ?? t.slice(0, 2);
 export function About({ s, index }: { s: SettingsData; index: number }) {
   const paragraphs = s.aboutText.split(/\n{2,}/).filter(Boolean);
   return (
-    <section id="about" aria-labelledby="about-title" className="mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-32">
+    <section id="about" aria-labelledby="about-title" className="mx-auto max-w-7xl overflow-x-clip px-4 py-20 md:px-8 md:py-32">
       <div className="grid items-center gap-14 lg:grid-cols-12 lg:gap-20">
         {/* The unclipped wrapper is observed: a fully clipped target never reports as intersecting. */}
         <div data-reveal className="about-portrait relative mx-auto w-full max-w-md lg:col-span-5">

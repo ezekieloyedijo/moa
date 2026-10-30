@@ -115,7 +115,7 @@ export function Contact({
           {s.replyTime}. Tell me about your project.
         </p>
 
-        <div className="mt-12 grid gap-10 lg:grid-cols-12 lg:gap-16">
+        <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-12 lg:gap-16">
           <div className="lg:col-span-7">
             <AnimatePresence mode="wait">
               {sentUrl ? (
@@ -214,10 +214,10 @@ export function Contact({
             <div className="grid gap-3">
               {wa && (
                 <a href={wa} target="_blank" rel="noopener noreferrer" onClick={() => track("contact_click", { method: "whatsapp" })} className="flex min-h-16 items-center gap-4 rounded-2xl border border-line bg-surface px-5 transition hover:-translate-y-0.5 hover:border-accent">
-                  <span className="grid h-11 w-11 place-items-center rounded-full bg-[#25D366] text-[#0B0B0F]">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#25D366] text-[#0B0B0F]">
                     <Icon name="whatsapp" size={22} />
                   </span>
-                  <span className="flex-1">
+                  <span className="min-w-0 flex-1">
                     <span className="block font-semibold">Chat on WhatsApp</span>
                     <span className="text-sm text-muted">Fastest reply</span>
                   </span>
@@ -226,11 +226,19 @@ export function Contact({
               )}
               {s.email && (
                 <button type="button" onClick={copyEmail} className="flex min-h-16 items-center gap-4 rounded-2xl border border-line bg-surface px-5 text-left transition hover:-translate-y-0.5 hover:border-accent">
-                  <span className="grid h-11 w-11 place-items-center rounded-full bg-accent-soft text-accent">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-accent-soft text-accent">
                     <Icon name="mail" />
                   </span>
-                  <span className="flex-1">
-                    <span className="block font-semibold">{s.email}</span>
+                  <span className="min-w-0 flex-1">
+                    {/* <wbr> lets a long address break cleanly before the "@" on narrow phones */}
+                    <span className="block font-semibold wrap-anywhere">
+                      {s.email.split("@")[0]}
+                      {s.email.includes("@") && (
+                        <>
+                          <wbr />@{s.email.split("@").slice(1).join("@")}
+                        </>
+                      )}
+                    </span>
                     <span className="text-sm text-muted">Click to copy</span>
                   </span>
                   <Icon name="copy" className="text-muted" />
@@ -238,10 +246,10 @@ export function Contact({
               )}
               {s.calendlyUrl && (
                 <a href={s.calendlyUrl} target="_blank" rel="noopener noreferrer" onClick={() => track("book_call", { method: "calendly" })} className="flex min-h-16 items-center gap-4 rounded-2xl border border-line bg-surface px-5 transition hover:-translate-y-0.5 hover:border-accent">
-                  <span className="grid h-11 w-11 place-items-center rounded-full bg-accent-soft text-accent">
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-accent-soft text-accent">
                     <Icon name="calendar" />
                   </span>
-                  <span className="flex-1">
+                  <span className="min-w-0 flex-1">
                     <span className="block font-semibold">Book a free 15-min call</span>
                     <span className="text-sm text-muted">Pick a time on Calendly</span>
                   </span>
