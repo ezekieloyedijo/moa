@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { parseVideoUrl } from "./video";
+import { SECTION_KEYS, type SectionKey } from "./sections";
 
 /**
  * Zod schemas shared by dashboard forms (inline validation) and server
@@ -95,6 +96,9 @@ export const schemas = {
 export type ResourceKey = keyof typeof schemas;
 export const resourceKeys = Object.keys(schemas) as ResourceKey[];
 
+const sectionOverride = z.object({ enabled: bool, label: str(60), title: str(120), intro: str(300) }).partial();
+const sectionsSchema = z.object(Object.fromEntries(SECTION_KEYS.map((k) => [k, sectionOverride])) as Record<SectionKey, typeof sectionOverride>).partial();
+
 export const settingsSchema = z.object({
   brandName: req(30),
   ownerName: req(100),
@@ -141,6 +145,8 @@ export const settingsSchema = z.object({
   metaPixelId: str(30).refine((v) => v === "" || /^\d+$/.test(v), "Digits only"),
   leadMagnetTitle: str(120),
   leadMagnetUrl: optUrl,
+  leadMagnetEnabled: bool,
+  sections: sectionsSchema,
 });
 export type SettingsInput = z.infer<typeof settingsSchema>;
 

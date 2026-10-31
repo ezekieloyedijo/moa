@@ -15,6 +15,7 @@ const NAV: Array<{ group: string; items: Array<{ href: string; label: string; ic
     group: "Site content",
     items: [
       { href: "/admin/settings", label: "Settings & Hero", icon: "spark" },
+      { href: "/admin/sections", label: "Page sections", icon: "list" },
       { href: "/admin/projects", label: "Projects", icon: "film" },
       { href: "/admin/categories", label: "Categories", icon: "folder" },
       { href: "/admin/gallery", label: "Gallery", icon: "grid" },

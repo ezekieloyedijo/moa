@@ -9,14 +9,6 @@ import { Cta } from "./cta";
 import { cn } from "@/lib/utils";
 import { isFinePointer, prefersReducedMotion } from "@/lib/motion";
 
-const LINKS = [
-  { href: "#work", label: "Work" },
-  { href: "#services", label: "Services" },
-  { href: "#about", label: "About" },
-  { href: "#faq", label: "FAQ" },
-  { href: "#contact", label: "Contact" },
-];
-
 /** Hover text scramble (desktop only) — letters shuffle then settle. */
 function ScrambleLink({ href, label }: { href: string; label: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -57,12 +49,15 @@ export function Navbar({
   logoDarkUrl,
   bookHref,
   bookExternal,
+  links,
 }: {
   brand: string;
   logoLightUrl: string;
   logoDarkUrl: string;
   bookHref: string;
   bookExternal: boolean;
+  /** In-page links; sections switched off in the dashboard are left out. */
+  links: Array<{ href: string; label: string }>;
 }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -111,7 +106,7 @@ export function Navbar({
               !scrolled && "[&_a]:text-white/80! [&_a:hover]:text-white!",
             )}
           >
-            {LINKS.map((l) => (
+            {links.map((l) => (
               <li key={l.href}>
                 <ScrambleLink {...l} />
               </li>
@@ -156,7 +151,7 @@ export function Navbar({
             transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
           >
             <ul className="flex flex-1 flex-col justify-center gap-1">
-              {LINKS.map((l, i) => (
+              {links.map((l, i) => (
                 <motion.li
                   key={l.href}
                   initial={{ opacity: 0, y: 30 }}

@@ -10,6 +10,7 @@ import { cn, whatsappLink } from "@/lib/utils";
 import { track } from "@/lib/track";
 import { Icon } from "@/components/icons";
 import { Avatar } from "./testimonials";
+import type { SectionText } from "@/lib/sections";
 
 const BUDGETS = ["Under $250", "$250 – $500", "$500 – $1,000", "$1,000 – $3,000", "$3,000+", "Not sure yet"];
 
@@ -19,11 +20,13 @@ export function Contact({
   projectTypes,
   testimonial,
   index,
+  heading,
 }: {
   s: SettingsData;
   projectTypes: string[];
   testimonial?: TestimonialData;
   index: number;
+  heading: SectionText;
 }) {
   const [startedAt, setStartedAt] = useState(0);
   const [fe, setFe] = useState<Record<string, string>>({});
@@ -93,6 +96,10 @@ export function Contact({
     }
   }
 
+  // The last word is highlighted, as in "LET'S TALK" (single-word titles stay plain).
+  const lastSpace = heading.title.trimEnd().lastIndexOf(" ");
+  const accentFrom = lastSpace > 0 ? lastSpace + 1 : Infinity;
+
   const field =
     "mt-2 block w-full min-h-12 rounded-xl border bg-bg px-4 py-3 text-base text-fg placeholder:text-muted/70 transition-colors focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/30";
 
@@ -101,12 +108,12 @@ export function Contact({
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         <p className="mb-4 flex items-center gap-3 font-mono text-xs uppercase tracking-[0.2em] text-muted">
           <span className="text-accent">{String(index).padStart(2, "0")}</span>
-          <span className="h-px w-8 bg-line" aria-hidden="true" /> Contact
+          <span className="h-px w-8 bg-line" aria-hidden="true" /> {heading.label}
         </p>
         <h2 id="contact-title" className="flex flex-wrap font-display text-[clamp(4.5rem,19vw,17rem)] uppercase leading-[0.82] tracking-tight">
-          {"LET'S TALK".split("").map((ch, i) => (
+          {[...heading.title].map((ch, i) => (
             <span key={i} className="mask-line inline-block" style={{ "--i": i } as React.CSSProperties}>
-              <span className={cn(ch === " " && "w-[0.25em]", i >= 6 && "text-accent")}>{ch === " " ? " " : ch}</span>
+              <span className={cn(ch === " " && "w-[0.25em]", i >= accentFrom && "text-accent")}>{ch === " " ? " " : ch}</span>
             </span>
           ))}
         </h2>

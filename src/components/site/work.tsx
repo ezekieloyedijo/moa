@@ -11,6 +11,7 @@ import { useVideoModal, type ModalVideo } from "./video-modal";
 import { SmartImage } from "./smart-image";
 import { PlayButton } from "./play-button";
 import { SectionHeading } from "./section-heading";
+import type { SectionText } from "@/lib/sections";
 import { Cta, ProofLine } from "./cta";
 
 const toModal = (p: ProjectData): ModalVideo => ({
@@ -34,11 +35,15 @@ export function Work({
   projects,
   categories,
   index,
+  heading,
+  contactHref,
   proof,
 }: {
   projects: ProjectData[];
   categories: CategoryData[];
   index: number;
+  heading: SectionText;
+  contactHref: string;
   proof: string;
 }) {
   const [filter, setFilter] = useState("all");
@@ -55,11 +60,7 @@ export function Work({
     <section id="work" aria-labelledby="work-title" className="mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-32">
       <div id="work-title">
         <SectionHeading
-          index={index}
-          label="Selected work"
-          title="Edits that got results"
-          intro="Real projects for creators, brands and agencies. Click any project to watch it and see the outcome."
-        />
+          index={index} label={heading.label} title={heading.title} intro={heading.intro} />
       </div>
 
       <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
@@ -140,7 +141,7 @@ export function Work({
 
       <div className="mt-14 flex flex-col items-center gap-4 rounded-3xl border border-line bg-surface px-6 py-10 text-center">
         <p className="font-display text-[clamp(2rem,5vw,3.5rem)] uppercase leading-none">Want results like these?</p>
-        <Cta href="#contact" event="contact_click">
+        <Cta href={contactHref} external={contactHref.startsWith("http")} event="contact_click">
           Let&apos;s talk <Icon name="arrow" size={18} />
         </Cta>
         <ProofLine text={proof} />

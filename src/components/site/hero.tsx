@@ -8,7 +8,7 @@ import { Icon } from "@/components/icons";
  * 02 HERO. Always sits on dark footage + scrim, so its text is white in both
  * themes. The H1 holds the owner's name AND role (one H1 on the page).
  */
-export function Hero({ s, bookHref, bookExternal }: { s: SettingsData; bookHref: string; bookExternal: boolean }) {
+export function Hero({ s, bookHref, bookExternal, showExplore }: { s: SettingsData; bookHref: string; bookExternal: boolean; showExplore: boolean }) {
   const name = s.heroHeadline || s.ownerName;
   let letterIndex = 0;
 
@@ -16,9 +16,7 @@ export function Hero({ s, bookHref, bookExternal }: { s: SettingsData; bookHref:
     <section id="top" aria-label="Introduction" className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-black text-white">
       {/* Background: poster (LCP image) + optional muted loop */}
       <HeroMedia videoUrl={s.heroVideoUrl}>
-        {s.heroPosterUrl && (
-          <SmartImage src={s.heroPosterUrl} alt="" fill priority sizes="100vw" className="object-cover" />
-        )}
+        {s.heroPosterUrl && <SmartImage src={s.heroPosterUrl} alt="" fill priority sizes="100vw" className="object-cover" />}
       </HeroMedia>
       <div className="scrim-full absolute inset-0 -z-10" aria-hidden="true" />
 
@@ -85,24 +83,28 @@ export function Hero({ s, bookHref, bookExternal }: { s: SettingsData; bookHref:
         )}
       </div>
 
-      {/* Rotating "scroll to explore" badge */}
-      <a
-        href="#work"
-        aria-label="Scroll to explore my work"
-        className="absolute bottom-[16svh] right-4 hidden h-28 w-28 md:right-8 md:grid md:place-items-center"
-      >
-        <svg viewBox="0 0 100 100" className="spin-slow absolute inset-0 h-full w-full" aria-hidden="true">
-          <defs>
-            <path id="circle-path" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
-          </defs>
-          <text className="fill-white font-mono text-[9px] uppercase">
-            <textPath href="#circle-path" textLength="232" lengthAdjust="spacing">Scroll to explore • Watch my work •</textPath>
-          </text>
-        </svg>
-        <span className="grid h-11 w-11 place-items-center rounded-full bg-white text-black">
-          <Icon name="arrow" className="rotate-90" size={18} />
-        </span>
-      </a>
+      {/* Rotating "scroll to explore" badge (points at the work section, so it goes when that's switched off) */}
+      {showExplore && (
+        <a
+          href="#work"
+          aria-label="Scroll to explore my work"
+          className="absolute bottom-[16svh] right-4 hidden h-28 w-28 md:right-8 md:grid md:place-items-center"
+        >
+          <svg viewBox="0 0 100 100" className="spin-slow absolute inset-0 h-full w-full" aria-hidden="true">
+            <defs>
+              <path id="circle-path" d="M50,50 m-38,0 a38,38 0 1,1 76,0 a38,38 0 1,1 -76,0" />
+            </defs>
+            <text className="fill-white font-mono text-[9px] uppercase">
+              <textPath href="#circle-path" textLength="232" lengthAdjust="spacing">
+                Scroll to explore • Watch my work •
+              </textPath>
+            </text>
+          </svg>
+          <span className="grid h-11 w-11 place-items-center rounded-full bg-white text-black">
+            <Icon name="arrow" className="rotate-90" size={18} />
+          </span>
+        </a>
+      )}
     </section>
   );
 }

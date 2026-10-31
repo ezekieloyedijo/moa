@@ -6,11 +6,11 @@ import { prefersReducedMotion } from "@/lib/motion";
 import { SmartImage } from "./smart-image";
 
 /** 03 TRUST BAR: monochrome logo marquee (speeds up with scroll) + count-up stats. */
-export function TrustBar({ logos, stats }: { logos: LogoData[]; stats: StatData[] }) {
+export function TrustBar({ logos, stats, title }: { logos: LogoData[]; stats: StatData[]; title: string }) {
   return (
     <section aria-labelledby="trust-heading" className="border-y border-line bg-surface py-10 md:py-14">
       <h2 id="trust-heading" className="mb-8 px-4 text-center font-mono text-xs uppercase tracking-[0.2em] text-muted">
-        Trusted by creators, brands &amp; agencies
+        {title}
       </h2>
       {logos.length > 0 && <Marquee logos={logos} />}
       {stats.length > 0 && (

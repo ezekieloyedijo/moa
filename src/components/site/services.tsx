@@ -1,5 +1,6 @@
 import type { PricingData, ServiceData } from "@/lib/types";
 import { SectionHeading } from "./section-heading";
+import type { SectionText } from "@/lib/sections";
 import { Accordion } from "./accordion";
 import { Cta, ProofLine } from "./cta";
 import { Icon } from "@/components/icons";
@@ -10,6 +11,7 @@ export function Services({
   services,
   pricing,
   index,
+  heading,
   bookHref,
   bookExternal,
   proof,
@@ -17,6 +19,7 @@ export function Services({
   services: ServiceData[];
   pricing: PricingData[];
   index: number;
+  heading: SectionText;
   bookHref: string;
   bookExternal: boolean;
   proof: string;
@@ -25,11 +28,7 @@ export function Services({
     <section id="services" aria-labelledby="services-title" className="mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-32">
       <div id="services-title">
         <SectionHeading
-          index={index}
-          label="Services & packages"
-          title="What I can edit for you"
-          intro="Pick a service to see what's included, how long it takes and where pricing starts."
-        />
+          index={index} label={heading.label} title={heading.title} intro={heading.intro} />
       </div>
 
       {services.length > 0 && (

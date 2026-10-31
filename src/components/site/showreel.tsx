@@ -7,13 +7,14 @@ import { useVideoModal } from "./video-modal";
 import { SmartImage } from "./smart-image";
 import { PlayButton } from "./play-button";
 import { SectionHeading } from "./section-heading";
+import type { SectionText } from "@/lib/sections";
 
 /**
  * 05 SHOWREEL. Desktop: the frame is pinned and scales to fullscreen as you
  * scroll. Mobile / reduced motion: a simple facade card. Either way the
  * YouTube iframe loads only when the visitor clicks play.
  */
-export function Showreel({ url, thumbnail, owner, index }: { url: string; thumbnail: string; owner: string; index: number }) {
+export function Showreel({ url, thumbnail, owner, index, heading }: { url: string; thumbnail: string; owner: string; index: number; heading: SectionText }) {
   const open = useVideoModal();
   const section = useRef<HTMLDivElement>(null);
   const frame = useRef<HTMLButtonElement>(null);
@@ -45,7 +46,7 @@ export function Showreel({ url, thumbnail, owner, index }: { url: string; thumbn
   return (
     <section id="showreel" aria-labelledby="showreel-title" className="relative">
       <div id="showreel-title" className="mx-auto max-w-7xl px-4 pt-20 md:px-8 md:pt-32">
-        <SectionHeading index={index} label="Showreel" title="My best work in 90 seconds" intro="A fast cut of recent edits. Press play to watch with sound." />
+        <SectionHeading index={index} label={heading.label} title={heading.title} intro={heading.intro} />
       </div>
       <div ref={section} className="overflow-hidden px-4 pb-20 md:px-8 lg:flex lg:h-screen lg:items-center lg:justify-center lg:p-0">
         <button

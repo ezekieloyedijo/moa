@@ -61,6 +61,9 @@ export const placeholderSettings = {
   metaPixelId: "",
   leadMagnetTitle: "Free guide: 7 editing tricks that double watch time",
   leadMagnetUrl: "https://example.com/watch-time-guide.pdf",
+  leadMagnetEnabled: true,
+  // Section visibility and heading overrides (see src/lib/sections.ts). Empty = all on, default text.
+  sections: {},
 };
 
 export const placeholderCategories = [

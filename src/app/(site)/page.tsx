@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { getPublicData } from "@/lib/data";
 import { buildJsonLd } from "@/lib/jsonld";
-import { siteUrl } from "@/lib/utils";
+import { siteUrl, whatsappLink } from "@/lib/utils";
+import { resolveSections, sectionLinks } from "@/lib/sections";
 import { introScript } from "@/lib/intro";
 import { VideoModalProvider } from "@/components/site/video-modal";
 import { SmoothScroll } from "@/components/site/smooth-scroll";
@@ -63,9 +64,16 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomePage() {
   const d = await getPublicData();
   const s = d.settings;
-  const bookHref = s.calendlyUrl || "#contact";
-  const bookExternal = !!s.calendlyUrl;
+  // Section switches and headings from Dashboard → Page sections.
+  const sec = resolveSections(s.sections, s.ownerName, { about: { title: s.aboutHeading } });
+  const on = (k: keyof typeof sec) => sec[k].enabled;
+  // "Book a call" opens Calendly, else the contact form, else WhatsApp when the form is switched off.
+  const wa = whatsappLink(s.whatsappNumber);
+  const bookHref = s.calendlyUrl || (on("contact") || !wa ? "#contact" : wa);
+  const bookExternal = bookHref.startsWith("http");
   const proof = s.trustLine;
+  const links = sectionLinks(sec, ["work", "services", "about", "faq", "contact"]);
+  const footerLinks = sectionLinks(sec, ["work", "services", "gallery", "about", "faq", "contact"]);
 
   // Visible section numbers (01, 02, …) follow the sections that actually render.
   let n = 0;
@@ -82,27 +90,55 @@ export default async function HomePage() {
       <RevealObserver />
       <CustomCursor />
 
-      <Navbar brand={s.brandName} logoLightUrl={s.logoLightUrl} logoDarkUrl={s.logoDarkUrl} bookHref={bookHref} bookExternal={bookExternal} />
+      <Navbar brand={s.brandName} logoLightUrl={s.logoLightUrl} logoDarkUrl={s.logoDarkUrl} bookHref={bookHref} bookExternal={bookExternal} links={links} />
 
       <main id="main">
-        <Hero s={s} bookHref={bookHref} bookExternal={bookExternal} />
-        <TrustBar logos={d.logos} stats={d.stats} />
-        {d.painPoints.length > 0 && <ProblemSolution items={d.painPoints} name={s.ownerName} index={num()} />}
-        {s.showreelUrl && <Showreel url={s.showreelUrl} thumbnail={s.showreelThumbnailUrl || s.heroPosterUrl} owner={s.ownerName} index={num()} />}
-        {d.projects.length > 0 && <Work projects={d.projects} categories={d.categories} index={num()} proof={proof} />}
-        {d.projects.some((p) => p.isCaseStudy) && <CaseStudies projects={d.projects} index={num()} />}
-        {d.gallery.length > 0 && <Gallery items={d.gallery} index={num()} />}
-        <Services services={d.services} pricing={d.pricing} index={num()} bookHref={bookHref} bookExternal={bookExternal} proof={proof} />
-        {d.process.length > 0 && <Process steps={d.process} index={num()} />}
-        {d.testimonials.length > 0 && (
-          <Testimonials items={d.testimonials} index={num()} happyClients={s.happyClients} bookHref={bookHref} bookExternal={bookExternal} />
+        {on("hero") && <Hero s={s} bookHref={bookHref} bookExternal={bookExternal} showExplore={on("work") && d.projects.length > 0} />}
+        {on("trust") && <TrustBar logos={d.logos} stats={d.stats} title={sec.trust.title} />}
+        {on("why") && d.painPoints.length > 0 && <ProblemSolution items={d.painPoints} index={num()} heading={sec.why} />}
+        {on("showreel") && s.showreelUrl && (
+          <Showreel url={s.showreelUrl} thumbnail={s.showreelThumbnailUrl || s.heroPosterUrl} owner={s.ownerName} index={num()} heading={sec.showreel} />
         )}
-        <About s={s} index={num()} />
-        {d.faqs.length > 0 && <Faq faqs={d.faqs} index={num()} />}
-        <Contact s={s} projectTypes={d.services.map((x) => x.title)} testimonial={d.testimonials[0]} index={num()} />
+        {on("work") && d.projects.length > 0 && (
+          <Work
+            projects={d.projects}
+            categories={d.categories}
+            index={num()}
+            heading={sec.work}
+            contactHref={on("contact") || !wa ? "#contact" : wa}
+            proof={proof}
+          />
+        )}
+        {on("caseStudies") && d.projects.some((p) => p.isCaseStudy) && <CaseStudies projects={d.projects} index={num()} heading={sec.caseStudies} />}
+        {on("gallery") && d.gallery.length > 0 && <Gallery items={d.gallery} index={num()} heading={sec.gallery} />}
+        {on("services") && (
+          <Services
+            services={d.services}
+            pricing={d.pricing}
+            index={num()}
+            heading={sec.services}
+            bookHref={bookHref}
+            bookExternal={bookExternal}
+            proof={proof}
+          />
+        )}
+        {on("process") && d.process.length > 0 && <Process steps={d.process} index={num()} heading={sec.process} />}
+        {on("testimonials") && d.testimonials.length > 0 && (
+          <Testimonials
+            items={d.testimonials}
+            index={num()}
+            heading={sec.testimonials}
+            happyClients={s.happyClients}
+            bookHref={bookHref}
+            bookExternal={bookExternal}
+          />
+        )}
+        {on("about") && <About s={s} index={num()} heading={sec.about} />}
+        {on("faq") && d.faqs.length > 0 && <Faq faqs={d.faqs} index={num()} heading={sec.faq} />}
+        {on("contact") && <Contact s={s} projectTypes={d.services.map((x) => x.title)} testimonial={d.testimonials[0]} index={num()} heading={sec.contact} />}
       </main>
 
-      <Footer s={s} socials={d.socials} />
+      <Footer s={s} socials={d.socials} links={footerLinks} />
       <GlobalCtas
         whatsapp={s.whatsappNumber}
         ownerFirstName={s.ownerName.split(" ")[0]}

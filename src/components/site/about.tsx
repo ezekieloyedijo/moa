@@ -1,6 +1,7 @@
 import type { SettingsData } from "@/lib/types";
 import { SmartImage } from "./smart-image";
 import { SectionHeading } from "./section-heading";
+import type { SectionText } from "@/lib/sections";
 
 const TOOL_ABBR: Record<string, string> = {
   "premiere pro": "Pr",
@@ -18,7 +19,7 @@ const TOOL_ABBR: Record<string, string> = {
 const abbr = (t: string) => TOOL_ABBR[t.toLowerCase()] ?? t.slice(0, 2);
 
 /** 11 ABOUT: portrait with mask reveal + accent glow, story, experience, software. */
-export function About({ s, index }: { s: SettingsData; index: number }) {
+export function About({ s, index, heading }: { s: SettingsData; index: number; heading: SectionText }) {
   const paragraphs = s.aboutText.split(/\n{2,}/).filter(Boolean);
   return (
     <section id="about" aria-labelledby="about-title" className="mx-auto max-w-7xl overflow-x-clip px-4 py-20 md:px-8 md:py-32">
@@ -41,7 +42,7 @@ export function About({ s, index }: { s: SettingsData; index: number }) {
 
         <div className="lg:col-span-7">
           <div id="about-title">
-            <SectionHeading index={index} label={`About ${s.ownerName.split(" ")[0]}`} title={s.aboutHeading || "About me"} className="!mb-8" />
+            <SectionHeading index={index} label={heading.label} title={heading.title} className="!mb-8" />
           </div>
           <div className="space-y-5 text-base leading-relaxed text-muted md:text-lg">
             {paragraphs.map((p, i) => (

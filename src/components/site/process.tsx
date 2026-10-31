@@ -5,12 +5,13 @@ import type { ProcessData } from "@/lib/types";
 import { isFinePointer, loadGsap, prefersReducedMotion } from "@/lib/motion";
 import { Icon } from "@/components/icons";
 import { SectionHeading } from "./section-heading";
+import type { SectionText } from "@/lib/sections";
 
 /**
  * 09 PROCESS. Desktop: the section pins and the steps scroll horizontally
  * along an editing timeline with a moving playhead. Mobile: vertical timeline.
  */
-export function Process({ steps, index }: { steps: ProcessData[]; index: number }) {
+export function Process({ steps, index, heading }: { steps: ProcessData[]; index: number; heading: SectionText }) {
   const pin = useRef<HTMLDivElement>(null);
   const track = useRef<HTMLOListElement>(null);
   const head = useRef<HTMLDivElement>(null);
@@ -47,11 +48,7 @@ export function Process({ steps, index }: { steps: ProcessData[]; index: number 
       <div ref={pin} className="overflow-hidden py-20 md:py-32 lg:flex lg:h-screen lg:flex-col lg:justify-center lg:py-0">
         <div id="process-title" className="mx-auto w-full max-w-7xl px-4 md:px-8">
           <SectionHeading
-            index={index}
-            label="How it works"
-            title="From footage to final cut"
-            intro="A simple five-step process, so you always know what happens next and when."
-          />
+            index={index} label={heading.label} title={heading.title} intro={heading.intro} />
         </div>
 
         {/* Timeline ruler + playhead (desktop) */}

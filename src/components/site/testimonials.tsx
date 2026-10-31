@@ -9,6 +9,7 @@ import { Icon } from "@/components/icons";
 import { useVideoModal } from "./video-modal";
 import { SmartImage } from "./smart-image";
 import { SectionHeading } from "./section-heading";
+import type { SectionText } from "@/lib/sections";
 import { Cta } from "./cta";
 
 /** Avatar: photo when uploaded, otherwise initials on an accent tint. */
@@ -29,12 +30,14 @@ export function Avatar({ name, photo, size = 56 }: { name: string; photo?: strin
 export function Testimonials({
   items,
   index,
+  heading,
   happyClients,
   bookHref,
   bookExternal,
 }: {
   items: TestimonialData[];
   index: number;
+  heading: SectionText;
   happyClients: number;
   bookHref: string;
   bookExternal: boolean;
@@ -67,7 +70,7 @@ export function Testimonials({
   return (
     <section id="testimonials" aria-labelledby="testimonials-title" className="mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-32">
       <div id="testimonials-title">
-        <SectionHeading index={index} label="Testimonials" title="What clients say" intro="Real words from creators, brands and agencies I've edited for." />
+        <SectionHeading index={index} label={heading.label} title={heading.title} intro={heading.intro} />
       </div>
 
       <div

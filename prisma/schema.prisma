@@ -88,6 +88,9 @@ model SiteSettings {
   metaPixelId        String    @default("")
   leadMagnetTitle    String    @default("")
   leadMagnetUrl      String    @default("")
+  leadMagnetEnabled  Boolean   @default(true)
+  /// Per-section visibility and heading text; see src/lib/sections.ts.
+  sections           Json      @default("{}")
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 }

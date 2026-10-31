@@ -56,8 +56,8 @@ const general: SettingsSection[] = [
   {
     id: "about",
     title: "About section",
+    description: "The section title is edited under Page sections.",
     fields: [
-      { type: "text", name: "aboutHeading", label: "Heading", full: true },
       { type: "textarea", name: "aboutText", label: "Your story", rows: 8, help: "Leave a blank line between paragraphs. Keep paragraphs short.", counter: 3000 },
       { type: "image", name: "portraitUrl", label: "Portrait photo", aspect: "4/5", maxWidth: 1200, folder: "brand" },
       { type: "text", name: "portraitAlt", label: "Portrait alt text", help: "Describe the photo for Google and screen readers." },
@@ -70,6 +70,7 @@ const general: SettingsSection[] = [
     title: "Lead magnet (footer signup)",
     description: "Visitors enter their email to get a free resource. Signups appear under Subscribers.",
     fields: [
+      { type: "toggle", name: "leadMagnetEnabled", label: "Show the signup in the footer", full: true },
       { type: "text", name: "leadMagnetTitle", label: "Offer title", full: true, placeholder: "Free guide: 7 editing tricks that double watch time" },
       { type: "url", name: "leadMagnetUrl", label: "Download link (PDF, Google Drive…)", full: true },
     ],

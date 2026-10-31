@@ -7,13 +7,14 @@ import { cn } from "@/lib/utils";
 import { Icon } from "@/components/icons";
 import { SmartImage } from "./smart-image";
 import { SectionHeading } from "./section-heading";
+import type { SectionText } from "@/lib/sections";
 
 /**
  * 07b GALLERY: masonry grid of stills, BTS and thumbnail designs with
  * category tabs. Opens a full-screen lightbox (swipe / arrows / Esc) that
  * zooms from the clicked tile via a shared layout animation.
  */
-export function Gallery({ items, index }: { items: GalleryData[]; index: number }) {
+export function Gallery({ items, index, heading }: { items: GalleryData[]; index: number; heading: SectionText }) {
   const [filter, setFilter] = useState("All");
   const [active, setActive] = useState<number | null>(null);
   const reduce = useReducedMotion();
@@ -27,11 +28,7 @@ export function Gallery({ items, index }: { items: GalleryData[]; index: number 
     <section id="gallery" aria-labelledby="gallery-title" className="mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-32">
       <div id="gallery-title">
         <SectionHeading
-          index={index}
-          label="Gallery"
-          title="Stills, thumbnails & behind the scenes"
-          intro="Frames from my edits, thumbnail designs and moments from set. Tap any image to view it full screen."
-        />
+          index={index} label={heading.label} title={heading.title} intro={heading.intro} />
       </div>
 
       <div role="tablist" aria-label="Filter gallery" className="no-scrollbar -mx-4 mb-8 flex gap-2 overflow-x-auto px-4 md:mx-0 md:px-0">

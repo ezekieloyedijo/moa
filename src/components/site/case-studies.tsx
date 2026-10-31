@@ -1,9 +1,10 @@
 import type { ProjectData } from "@/lib/types";
 import { SectionHeading } from "./section-heading";
+import type { SectionText } from "@/lib/sections";
 import { BeforeAfter, WatchCaseButton } from "./case-studies-client";
 
 /** 07 CASE STUDIES: Challenge → Approach → Before/After → Results. */
-export function CaseStudies({ projects, index }: { projects: ProjectData[]; index: number }) {
+export function CaseStudies({ projects, index, heading }: { projects: ProjectData[]; index: number; heading: SectionText }) {
   const studies = projects.filter((p) => p.isCaseStudy);
   if (!studies.length) return null;
 
@@ -12,11 +13,7 @@ export function CaseStudies({ projects, index }: { projects: ProjectData[]; inde
       <div className="mx-auto max-w-7xl px-4 md:px-8">
         <div id="cs-title">
           <SectionHeading
-            index={index}
-            label="Case studies"
-            title="How the edit moved the numbers"
-            intro="A closer look at the problem, what I changed, and the measurable result."
-          />
+            index={index} label={heading.label} title={heading.title} intro={heading.intro} />
         </div>
 
         <div className="space-y-20 md:space-y-32">

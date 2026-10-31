@@ -86,7 +86,7 @@ function LeadMagnet({ title }: { title: string }) {
 }
 
 /** 14 FOOTER */
-export function Footer({ s, socials }: { s: SettingsData; socials: SocialData[] }) {
+export function Footer({ s, socials, links }: { s: SettingsData; socials: SocialData[]; links: Array<{ href: string; label: string }> }) {
   const year = new Date().getFullYear();
   return (
     <footer className="border-t border-line pb-28 pt-16 md:pb-10">
@@ -106,14 +106,7 @@ export function Footer({ s, socials }: { s: SettingsData; socials: SocialData[] 
         <nav aria-label="Footer" className="md:col-span-3">
           <h2 className="mb-4 font-mono text-xs uppercase tracking-widest text-muted">Quick links</h2>
           <ul className="grid grid-cols-2 gap-x-6 gap-y-1">
-            {[
-              ["#work", "Work"],
-              ["#services", "Services"],
-              ["#gallery", "Gallery"],
-              ["#about", "About"],
-              ["#faq", "FAQ"],
-              ["#contact", "Contact"],
-            ].map(([href, label]) => (
+            {links.map(({ href, label }) => (
               <li key={href}>
                 <a href={href} className="inline-flex min-h-11 items-center hover:text-accent">
                   {label}
@@ -124,7 +117,7 @@ export function Footer({ s, socials }: { s: SettingsData; socials: SocialData[] 
         </nav>
 
         <div className="space-y-6 md:col-span-5">
-          {s.leadMagnetTitle && <LeadMagnet title={s.leadMagnetTitle} />}
+          {s.leadMagnetEnabled && s.leadMagnetTitle && <LeadMagnet title={s.leadMagnetTitle} />}
           {socials.length > 0 && (
             <ul className="flex flex-wrap gap-2" aria-label="Social media">
               {socials.map((so) => (

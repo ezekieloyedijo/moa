@@ -1,20 +1,16 @@
 import type { PainPointData } from "@/lib/types";
 import { SectionHeading } from "./section-heading";
+import type { SectionText } from "@/lib/sections";
 import { Icon } from "@/components/icons";
 
 /** 04 PROBLEM → SOLUTION: client pain points vs. how Mercy solves them. */
-export function ProblemSolution({ items, name, index }: { items: PainPointData[]; name: string; index: number }) {
+export function ProblemSolution({ items, index, heading }: { items: PainPointData[]; index: number; heading: SectionText }) {
   if (!items.length) return null;
-  const first = name.split(" ")[0];
   return (
     <section id="why" aria-labelledby="why-title" className="mx-auto max-w-7xl px-4 py-20 md:px-8 md:py-32">
       <div id="why-title">
         <SectionHeading
-          index={index}
-          label="Why work with me"
-          title="Your problem, solved"
-          intro={`The editing headaches creators and brands bring to me, and exactly how ${first} fixes each one.`}
-        />
+          index={index} label={heading.label} title={heading.title} intro={heading.intro} />
       </div>
       <ol className="divide-y divide-line border-y border-line">
         {items.map((p, i) => (
